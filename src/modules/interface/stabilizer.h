@@ -33,5 +33,8 @@ void stabilizerInit(void);
 
 bool stabilizerTest(void);
 
+float getActiveRollNN(void);
+float getActivePitchNN(void);
+uint16_t getActiveThrustNN(void);
 
-#endif /* STABALIZER_H_ */
+#endif /* STABALIZER_H_w */

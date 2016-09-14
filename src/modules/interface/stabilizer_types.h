@@ -34,6 +34,63 @@
  * All have a timestamp to be set when the data is calculated.
  */
 
+// if 0 - 0 obstacles version, 1 - 1 obstactle version
+#define NN_OBS 0
+
+
+// marwz
+#define NN_SIZE 50
+
+#if NN_OBS == 0
+#define NN_INPUT_SIZE 6
+#else
+#define NN_INPUT_SIZE 10
+#endif
+
+#define NN_OUTPUT_SIZE 2
+// rows x col
+
+//#define REL_U(in) (if (in>0) return in else return 0)
+#define REL_U(in) ((in>0)?in:0)
+
+typedef struct nn_inputs_s {
+  float x1[NN_INPUT_SIZE];
+  float z;
+  float vz;
+  uint32_t updated;
+  uint32_t thrust;
+} nn_inputs_t;
+
+typedef struct nn_s {
+  uint32_t timestamp;  // Timestamp when the data was computed
+  uint32_t dt;
+  uint32_t thrust;
+  float weights1[NN_SIZE][NN_INPUT_SIZE]; //50x6
+  float weights2[NN_SIZE][NN_SIZE]; // 50x50
+  float weights3[NN_OUTPUT_SIZE][NN_SIZE]; //2x50
+  float b1 [NN_SIZE]; // 6x1
+  float b2 [NN_SIZE]; //50x1
+  float b3 [NN_OUTPUT_SIZE]; //2x1
+  float x1 [NN_INPUT_SIZE]; // 6x1
+  float x1_raw [NN_INPUT_SIZE]; // 6x1
+  float x2 [NN_SIZE]; // 50 first layer output
+  float x3 [NN_SIZE]; // 50 second layer output
+  float y [NN_OUTPUT_SIZE]; // 2
+  float std_x [NN_INPUT_SIZE]; // 6
+  float mean_x [NN_INPUT_SIZE]; // 6 
+  float std_y [NN_OUTPUT_SIZE]; // 2
+  float mean_y [NN_OUTPUT_SIZE]; // 2
+} nn_t;
+
+// for python nn formating static float R[3][3] = {{1,0,0},{0,1,0},{0,0,1}};
+// f = REL_U
+// normalize x1: x1 = (x1 - mean_x) / std_x  ; std_x and mean_x precalculated
+// x2 = f(weights1*x1 + b1)
+// x3 = f(weights2*x2 + b2)
+// y = weigths2 * x3 + b3
+// normalize y: y = y * std_y + mean_y; std_y and mean_y precalculated
+
+
 /** Attitude in euler angle form */
 typedef struct attitude_s {
   uint32_t timestamp;  // Timestamp when the data was computed

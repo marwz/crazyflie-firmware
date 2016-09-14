@@ -57,4 +57,8 @@ void commanderExtrxSet(const struct CommanderCrtpValues* val);
 
 void commanderGetSetpoint(setpoint_t *setpoint, const state_t *state);
 
+
+//marwz
+void commanderGetNNInputs(nn_inputs_t *val);
+
 #endif /* COMMANDER_H_ */
